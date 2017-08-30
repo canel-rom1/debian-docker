@@ -1,5 +1,5 @@
 FROM scratch
-MAINTAINER Jonathan Dowland <jmtd@debian.org>
+MAINTAINER Rom1 <rom1@canel.ch> - CANEL https://www.canel.ch
 ADD root.tar /
 
 # Unfortunately we have to use codenames here rather than something more
@@ -21,7 +21,7 @@ RUN apt-get update \
 	&& find /var/lib/apt/lists -type f -delete
 
 LABEL org.redmars.docker.VcsType git
-LABEL org.redmars.docker.VcsUrl  http://github.com/jmtd/debian-docker
+LABEL org.redmars.docker.VcsUrl  http://github.com/canel-rom1/debian-docker
 LABEL org.redmars.docker.VcsRef  SUBSTITUTION_FAILED
 
 CMD ["/bin/bash"]
