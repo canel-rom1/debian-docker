@@ -1,7 +1,8 @@
-# debian-docker
-scripts and Dockerfiles to build jmtd/debian\* docker images
+**!! THIS IS A FORK OF <a href="https://github.com/jmtd/debian-docker/">jmtd/debian-docker</a> !!**
 
-What I use to build `jmtd/debian:*` docker images on the Docker registry.
+# debian-docker
+
+scripts and Dockerfiles to build Debian docker images
 
 ## Description of images
 
@@ -9,15 +10,11 @@ What I use to build `jmtd/debian:*` docker images on the Docker registry.
    includes `apt`, `build-essential` and their dependencies. It's suitable
    as a base image for building a Debian package, or the basis of a *buildd*.
 
- * **jessie**: a base debian installation of *jessie* (current *stable*).
+ * **stretch**: a base debian installation of stretch (current *stable*).
+   Approx. 2997M in size
+
+ * **jessie**: a base debian installation of *jessie*.
    Approx. 218M in size.
-
- * **wheezy**: a base debian installation of *wheezy* (*oldstable*).
-   Approx 163M in size.
-
- * **wheezy-i386**: a base debian installation of the i386-architecture
-   version of *wheezy*. This could be used for anything requiring a 32-bit
-   toolchain. Approx 166M in size.
 
 ## Getting started
 
@@ -25,37 +22,16 @@ To build your own images run
 
 ```bash
 sudo apt-get install git make debootstrap
-git clone https://github.com/jmtd/debian-docker.git
+git clone https://github.com/canelrom1/debian-docker.git
 cd debian-docker/
-sudo make release=jessie prefix=jmtd arch=amd64 mirror=http://httpredir.debian.org/debian/
+sudo make release=stretch prefix=canelrom1 arch=amd64 mirror=http://httpredir.debian.org/debian/
 ```
 
 All the arguments above are optional. The values in the example above are
-the defaults. The resulting image would be tagged `jmtd/debian:jessie-amd64`.
+the defaults. The resulting image would be tagged `canelrom1/debian:stretch-amd64`.
 
-## Future work
 
-I don't want to maintain a zillion different images, but there are a few other
-variants that might be of use for people:
+---
+Forker — Rom1 <rom1@canel.ch> - CANEL https://www.canel.ch
 
- * Now *jessie* is released, I'll probably add *jessie-i386* and phase out
-   *wheezy-i386*.
- * Perhaps introduce floating release tags, e.g. `:stable`.
- * A `wine` base image, derived from (probably) `jessie-i386`.
- * Possibly a base X image, with x11vnc, uxterm and a lightweight window
-   manager. Last I checked `openbox` was a bit smaller than `icewm`.
- * minimised images. As per Joey H's blog, The *Debian* images here are
-   base Debian images, to avoid being misleading, but that makes them much
-   larger than Docker's "semi-official" Debian images (twice as large). We
-   could/should offer minimized images, starting with `--variant=minbase`
-   but also incorporating other things, such as some of the techniques used
-   by [emdebian](http://emdebian.org/). Just so long as we clearly label them
-   as being modified from stock Debian.
-
-## Further Reading
-
-[what does docker.io run -it debian sh
-run?](http://joeyh.name/blog/entry/docker_run_debian/) by Joey Hess, which
-recommends <q>only trust docker images you build yourself</q>.
-
- — Jonathan Dowland <jmtd@debian.org>
+Original — Jonathan Dowland <jmtd@debian.org>
