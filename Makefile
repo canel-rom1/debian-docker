@@ -5,40 +5,46 @@
 #       sudo make release=wheezy arch=i386 tag=wheezy-i386
 
 # variables that can be overridden:
+
+prefix  ?= canelrom1
 release ?= stretch
-prefix  ?= canel
 arch    ?= amd64
+version ?= 0.1
 mirror  ?= http://ftp.ch.debian.org/debian/
 tag     ?= $(release)-$(arch)
+variant ?= minbase
+description ?= Image de Debian $(tag)
 
-build: $(tag)/root.tar $(tag)/Dockerfile
-	docker build -t $(prefix)/debian:$(tag) $(tag)
-
+dir_ = ./rootfs
 rev=$(shell git rev-parse --verify HEAD)
-$(tag)/Dockerfile: Dockerfile.in $(tag)
-	sed 's/SUBSTITUTION_FAILED/$(rev)/' $< >$@
+date=$(shell date +%d\\/%m\\/%y)
 
-$(tag):
-	mkdir $@
+build: $(dir_)/rootfs.tar $(dir_)/Dockerfile
+	docker build -t $(prefix)/debian-$(tag):$(version) $(dir_)
 
-$(tag)/root.tar: roots/$(tag)/etc $(tag)
-	cd roots/$(tag) \
-		&& tar -c --numeric-owner -f ../../$(tag)/root.tar ./
-
-# slightly awkward indirection to avoid a bug whereby user runs
-# this unprivileged, creates the dir but debootstrap fails, but
-# the target is satisfied and a subsequent run believes the rule
-# satisfied
-roots/$(tag):
+$(dir_):
 	mkdir -p $@
 
-roots/$(tag)/etc: roots/$(tag)
-	debootstrap --arch $(arch) $(release) $< $(mirror) \
-		&& chroot $< apt-get clean
+$(dir_)/Dockerfile: Dockerfile.in $(dir_)
+	cp $< $@
+	sed -i "s/date=\"\"/date=\"$(date)\"/" $@
+	sed -i "s/version=\"\"/version=\"$(version)\"/" $@
+	sed -i "s/description=\"\"/description=\"$(description)\"/" $@
+
+$(dir_)/rootfs.tar: $(dir_)/$(tag)
+	cd $(dir_)/$(tag) && tar -c --numeric-owner -f ../rootfs.tar ./
+
+$(dir_)/$(tag): $(dir_)/Dockerfile
+	mkdir -p $@
+	debootstrap --arch=$(arch) --variant=$(variant) $(release) $@ $(mirror)
+	chroot $@ apt-get clean
+
+clean-docker:
+	docker rmi $(prefix)/debian-$(tag):$(version)
 
 clean:
-	rm -f $(tag)/root.tar $(tag)/Dockerfile
-	rm -r roots/$(tag)
-	test -d $(tag) && rmdir $(tag)
+	rm -fr $(dir_)/$(tag)
+	rm -f $(dir_)/Dockerfile
+	rm -f $(dir_)/rootfs.tar
 
 .PHONY: clean build

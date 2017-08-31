@@ -6,15 +6,11 @@ scripts and Dockerfiles to build Debian docker images
 
 ## Description of images
 
- * **build**: This is a sid/unstable base image, variant *buildd*: this
-   includes `apt`, `build-essential` and their dependencies. It's suitable
-   as a base image for building a Debian package, or the basis of a *buildd*.
-
  * **stretch**: a base debian installation of stretch (current *stable*).
-   Approx. 2997M in size
+   Approx. 136M in size
 
  * **jessie**: a base debian installation of *jessie*.
-   Approx. 218M in size.
+   Approx. 156M in size.
 
 ## Getting started
 
@@ -24,7 +20,7 @@ To build your own images run
 sudo apt-get install git make debootstrap
 git clone https://github.com/canelrom1/debian-docker.git
 cd debian-docker/
-sudo make release=stretch prefix=canelrom1 arch=amd64 mirror=http://httpredir.debian.org/debian/
+sudo make release=stretch prefix=canelrom1 arch=amd64 variant=minbase mirror=http://httpredir.debian.org/debian/
 ```
 
 All the arguments above are optional. The values in the example above are
