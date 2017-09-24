@@ -9,9 +9,9 @@
 prefix  ?= canelrom1
 release ?= stretch
 arch    ?= amd64
-version ?= 0.1
+tag     ?= $(release)
+version ?= canel
 mirror  ?= http://ftp.ch.debian.org/debian/
-tag     ?= $(release)-$(arch)
 variant ?= minbase
 description ?= Image de Debian $(tag)
 
@@ -20,7 +20,7 @@ rev=$(shell git rev-parse --verify HEAD)
 date=$(shell date +%d\\/%m\\/%y)
 
 build: $(dir_)/rootfs.tar $(dir_)/Dockerfile
-	docker build -t $(prefix)/debian-$(tag):$(version) $(dir_)
+	docker build -t $(prefix)/debian-$(version):$(tag) $(dir_)
 
 $(dir_):
 	mkdir -p $@
@@ -31,16 +31,16 @@ $(dir_)/Dockerfile: Dockerfile.in $(dir_)
 	sed -i "s/version=\"\"/version=\"$(version)\"/" $@
 	sed -i "s/description=\"\"/description=\"$(description)\"/" $@
 
-$(dir_)/rootfs.tar: $(dir_)/$(tag)
-	cd $(dir_)/$(tag) && tar -c --numeric-owner -f ../rootfs.tar ./
+$(dir_)/rootfs.tar: $(dir_)/$(release)
+	cd $(dir_)/$(release) && tar -c --numeric-owner -f ../rootfs.tar ./
 
-$(dir_)/$(tag): $(dir_)/Dockerfile
+$(dir_)/$(release): $(dir_)/Dockerfile
 	mkdir -p $@
 	debootstrap --arch=$(arch) --variant=$(variant) $(release) $@ $(mirror)
 	chroot $@ apt-get clean
 
 clean-docker:
-	docker rmi $(prefix)/debian-$(tag):$(version)
+	docker rmi $(prefix)/debian-$(version):$(tag)
 
 clean:
 	rm -fr $(dir_)/$(tag)
