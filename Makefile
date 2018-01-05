@@ -36,7 +36,7 @@ $(dir_)/rootfs.tar: $(dir_)/$(release)
 
 $(dir_)/$(release): $(dir_)/Dockerfile
 	mkdir -p $@
-	debootstrap --arch=$(arch) --variant=$(variant) $(release) $@ $(mirror)
+	debootstrap --arch=$(arch) --include=procps --variant=$(variant) $(release) $@ $(mirror)
 	chroot $@ apt-get clean
 
 clean-docker:
