@@ -11,10 +11,10 @@ prefix  ?= canelrom1
 release ?= stretch
 arch    ?= amd64
 tag     ?= $(release)-$(version)
-version ?= 1.0
+version ?= $(shell date +%y.%m.%d)
 mirror  ?= http://ftp.ch.debian.org/debian/
 variant ?= minbase
-description ?= Image de Debian $(tag)
+description ?= Image de base de Debian $(release) $(arch) - $(variant)
 
 dir_ = ./rootfs
 rev=$(shell git rev-parse --verify HEAD)
@@ -32,7 +32,7 @@ $(dir_):
 $(dir_)/Dockerfile: Dockerfile.in $(dir_)
 	cp $< $@
 	sed -i "s/date=\"\"/date=\"$(date)\"/" $@
-	sed -i "s/version=\"\"/version=\"$(name) - $(version)\"/" $@
+	sed -i "s/version=\"\"/version=\"$(tag)\"/" $@
 	sed -i "s/description=\"\"/description=\"$(description)\"/" $@
 
 $(dir_)/rootfs.tar: $(dir_)/$(release)
@@ -50,5 +50,6 @@ clean:
 	rm -fr $(dir_)/$(tag)
 	rm -f $(dir_)/Dockerfile
 	rm -f $(dir_)/rootfs.tar
+	rmdir $(dir_)
 
 .PHONY: clean build
