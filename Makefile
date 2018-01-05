@@ -6,11 +6,12 @@
 
 # variables that can be overridden:
 
+name    ?= canel
 prefix  ?= canelrom1
 release ?= stretch
 arch    ?= amd64
-tag     ?= $(release)
-version ?= canel
+tag     ?= $(release)-$(version)
+version ?= 1.0
 mirror  ?= http://ftp.ch.debian.org/debian/
 variant ?= minbase
 description ?= Image de Debian $(tag)
@@ -20,7 +21,7 @@ rev=$(shell git rev-parse --verify HEAD)
 date=$(shell date +%d\\/%m\\/%y)
 
 build: $(dir_)/rootfs.tar $(dir_)/Dockerfile
-	docker build -t $(prefix)/debian-$(version):$(tag) $(dir_)
+	docker build -t $(prefix)/debian-$(name):$(tag) $(dir_)
 
 $(dir_):
 	mkdir -p $@
@@ -28,7 +29,7 @@ $(dir_):
 $(dir_)/Dockerfile: Dockerfile.in $(dir_)
 	cp $< $@
 	sed -i "s/date=\"\"/date=\"$(date)\"/" $@
-	sed -i "s/version=\"\"/version=\"$(version)\"/" $@
+	sed -i "s/version=\"\"/version=\"$(name) - $(version)\"/" $@
 	sed -i "s/description=\"\"/description=\"$(description)\"/" $@
 
 $(dir_)/rootfs.tar: $(dir_)/$(release)
@@ -40,7 +41,7 @@ $(dir_)/$(release): $(dir_)/Dockerfile
 	chroot $@ apt-get clean
 
 clean-docker:
-	docker rmi $(prefix)/debian-$(version):$(tag)
+	docker rmi $(prefix)/debian-$(name):$(tag)
 
 clean:
 	rm -fr $(dir_)/$(tag)
