@@ -20,8 +20,11 @@ dir_ = ./rootfs
 rev=$(shell git rev-parse --verify HEAD)
 date=$(shell date +%d\\/%m\\/%y)
 
+all: build
+
 build: $(dir_)/rootfs.tar $(dir_)/Dockerfile
 	docker build -t $(prefix)/debian-$(name):$(tag) $(dir_)
+	docker tag $(prefix)/debian-$(name):$(tag) $(prefix)/debian-$(name):latest
 
 $(dir_):
 	mkdir -p $@
