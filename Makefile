@@ -16,6 +16,8 @@ mirror  ?= http://ftp.ch.debian.org/debian/
 variant ?= minbase
 description ?= Image de base de Debian $(release) $(arch) - $(variant)
 
+packets=dirmngr,gpg,procps
+
 dir_ = ./rootfs
 rev=$(shell git rev-parse --verify HEAD)
 date=$(shell date +%d\\/%m\\/%y)
@@ -40,7 +42,7 @@ $(dir_)/rootfs.tar: $(dir_)/$(release)
 
 $(dir_)/$(release): $(dir_)/Dockerfile
 	mkdir -p $@
-	debootstrap --arch=$(arch) --include=procps --variant=$(variant) $(release) $@ $(mirror)
+	debootstrap --arch=$(arch) --include=$(packets) --variant=$(variant) $(release) $@ $(mirror)
 	chroot $@ apt-get clean
 
 clean-docker:
