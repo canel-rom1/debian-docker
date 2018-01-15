@@ -11,6 +11,5 @@ RUN apt-get update \
 	&& apt-get -y --purge autoremove \
 	&& apt-get clean \
 	&& find /var/lib/apt/lists -type f -delete \
-	&& apt-get update
 
 CMD ["/bin/bash"]
