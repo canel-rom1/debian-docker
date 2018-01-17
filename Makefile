@@ -16,7 +16,7 @@ mirror  ?= http://ftp.ch.debian.org/debian/
 variant ?= minbase
 description ?= Image de base de Debian $(release) $(arch) - $(variant)
 
-packets=dirmngr,gpg,procps
+packets=curl,dirmngr,gpg,procps
 
 dir_ = ./rootfs
 rev=$(shell git rev-parse --verify HEAD)
@@ -49,7 +49,7 @@ clean-docker:
 	docker rmi $(prefix)/debian-$(name):$(tag)
 
 clean:
-	rm -fr $(dir_)/$(tag)
+	rm -fr $(dir_)/$(release)
 	rm -f $(dir_)/Dockerfile
 	rm -f $(dir_)/rootfs.tar
 	rmdir $(dir_)
