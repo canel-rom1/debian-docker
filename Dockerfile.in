@@ -12,4 +12,4 @@ RUN apt-get update \
 	&& apt-get -y upgrade \
 	&& apt-get -y --purge autoremove \
 	&& apt-get clean \
-	&& find /var/lib/apt/lists -type f -delete \
+	&& find /var/lib/apt/lists -type f -delete
