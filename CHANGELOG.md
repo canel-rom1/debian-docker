@@ -1,5 +1,9 @@
 # Change log
 
-## 2017.01.11
+## 18.01.27
+- Add environment variable: DEBIAN_FRONTEND=noninteractive
+- Delete MAINTAINER (deprecated)
+
+## 18.01.11
 - Add CHANGELOG.md file
-- Include dirmngr pgp packet for install
+- Include dirmngr gnupg packet for install

@@ -16,7 +16,7 @@ mirror  ?= http://ftp.ch.debian.org/debian/
 variant ?= minbase
 description ?= Image de base de Debian $(release) $(arch) - $(variant)
 
-packets=curl,dirmngr,gpg,procps
+packets=curl,dirmngr,gnupg,procps
 
 dir_ = ./rootfs
 rev=$(shell git rev-parse --verify HEAD)

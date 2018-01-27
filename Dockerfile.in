@@ -1,15 +1,15 @@
 FROM scratch
-MAINTAINER Rom1 <rom1@canel.ch> - CANEL https://www.canel.ch
 ADD rootfs.tar /
 
+LABEL maintainer="Rom1 <rom1@canel.ch> - CANEL https://www.canel.ch"
 LABEL date=""
 LABEL version=""
 LABEL description=""
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update \
 	&& apt-get -y upgrade \
 	&& apt-get -y --purge autoremove \
 	&& apt-get clean \
 	&& find /var/lib/apt/lists -type f -delete \
-
-CMD ["/bin/bash"]
