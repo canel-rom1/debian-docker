@@ -42,6 +42,7 @@ $(dir_)/rootfs.tar: $(dir_)/$(release)
 
 $(dir_)/$(release): $(dir_)/Dockerfile
 	mkdir -p $@
+	chmod 755 $@
 	debootstrap --arch=$(arch) --include=$(packets) --variant=$(variant) $(release) $@ $(mirror)
 	chroot $@ apt-get clean
 
