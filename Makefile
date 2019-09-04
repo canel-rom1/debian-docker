@@ -27,6 +27,7 @@ all: build
 
 build: $(dir_)/rootfs.tar $(dir_)/Dockerfile
 	docker build -t $(prefix)/debian-$(name):$(tag) $(dir_)
+	docker tag $(prefix)/debian-$(name):$(tag) $(prefix)/debian-$(name):$(release)
 	docker tag $(prefix)/debian-$(name):$(tag) $(prefix)/debian-$(name):latest
 
 $(dir_):
@@ -46,6 +47,11 @@ $(dir_)/$(release): $(dir_)/Dockerfile
 	chmod 755 $@
 	debootstrap --arch=$(arch) --include=$(all_packets) --variant=$(variant) $(release) $@ $(mirror)
 	chroot $@ apt-get clean
+
+push:
+	docker push $(prefix)/debian-$(name):$(tag)
+	docker push $(prefix)/debian-$(name):$(release)
+	docker push $(prefix)/debian-$(name):latest
 
 clean-docker:
 	docker rmi $(prefix)/debian-$(name):$(tag)
