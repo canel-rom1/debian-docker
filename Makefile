@@ -8,15 +8,16 @@
 
 name    ?= canel
 prefix  ?= canelrom1
-release ?= stretch
+release ?= buster
 arch    ?= amd64
 tag     ?= $(release)-$(version)
 version ?= $(shell date +%y.%m.%d)
 mirror  ?= http://ftp.ch.debian.org/debian/
 variant ?= minbase
 description ?= Image de base de Debian $(release) $(arch) - $(variant)
+packets ?=
 
-packets=ca-certificates,curl,dirmngr,gnupg,procps,wget
+all_packets=ca-certificates,curl,dirmngr,gnupg,procps,wget,$(packets)
 
 dir_ = ./rootfs
 rev=$(shell git rev-parse --verify HEAD)
@@ -43,7 +44,7 @@ $(dir_)/rootfs.tar: $(dir_)/$(release)
 $(dir_)/$(release): $(dir_)/Dockerfile
 	mkdir -p $@
 	chmod 755 $@
-	debootstrap --arch=$(arch) --include=$(packets) --variant=$(variant) $(release) $@ $(mirror)
+	debootstrap --arch=$(arch) --include=$(all_packets) --variant=$(variant) $(release) $@ $(mirror)
 	chroot $@ apt-get clean
 
 clean-docker:
